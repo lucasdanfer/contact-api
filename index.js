@@ -1,4 +1,5 @@
 const custom = require('./config/custom')
+require('./infra/database.js')('mongodb://localhost/contact')
 
 const app = custom()
 

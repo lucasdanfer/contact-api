@@ -1,11 +1,10 @@
-class Contact {
-    add(contact, res) {
-        if (contact.name.length > 0) {
-            res.status(200).json(contact)
-        } else {
-            res.status(400).json(contact)
-        }
-    }
-}
+const mongoose = require('mongoose');
 
-module.exports = new Contact
+const schema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    }
+})
+
+module.exports = mongoose.model('contacts', schema);
