@@ -1,25 +1,25 @@
 const Repository = require('../infra/repository')
-const model = require('../model/contact')
+const model = require('../model/module')
 const { check } = require('express-validator')
 const validate = require('./validator')
 
-const contacts = new Repository(model)
+const modules = new Repository(model)
 
 module.exports = app => {
 
-    app.get('/contacts', (req, res) => {
-        contacts.build()
+    app.get('/modules', (req, res) => {
+        modules.findAll()
             .then(result => res.status(200).json(result))
             .catch(error => res.status(500).json(error))
     })
 
-    app.get('/contacts/:id', (req, res) => {
-        contacts.buildById(req.params.id)
+    app.get('/modules/:id', (req, res) => {
+        modules.findOne(req.params.id)
             .then(result => res.status(200).json(result))
             .catch(error => res.status(500).json(error))
     })
 
-    app.post('/contacts',
+    app.post('/modules',
         check('name').not().isEmpty().withMessage('must not be empty'),
         (req, res) => {
 
@@ -27,12 +27,12 @@ module.exports = app => {
                 return res.status(400).json({ errors: errors });
             })
 
-            contacts.insert(req.body)
+            modules.insert(req.body)
                 .then(result => res.status(200).json(result))
                 .catch(error => res.status(500).json(error))
         })
 
-    app.put('/contacts/:id',
+    app.put('/modules/:id',
         check('name').not().isEmpty().withMessage('must not be empty'),
         (req, res) => {
 
@@ -40,13 +40,13 @@ module.exports = app => {
                 return res.status(400).json({ errors: errors });
             })
 
-            contacts.update(req.params.id, req.body)
+            modules.update(req.params.id, req.body)
                 .then(result => res.status(200).json(result))
                 .catch(error => res.status(500).json(error))
         })
 
-    app.delete('/contacts/:id', (req, res) => {
-        contacts.remove(req.params.id)
+    app.delete('/modules/:id', (req, res) => {
+        modules.remove(req.params.id)
             .then(result => res.status(200).json(result))
             .catch(error => res.status(500).json(error))
     })

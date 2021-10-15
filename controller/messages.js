@@ -1,52 +1,54 @@
 const Repository = require('../infra/repository')
-const model = require('../model/contact')
+const model = require('../model/message')
 const { check } = require('express-validator')
 const validate = require('./validator')
 
-const contacts = new Repository(model)
+const messages = new Repository(model)
 
 module.exports = app => {
 
-    app.get('/contacts', (req, res) => {
-        contacts.build()
+    app.get('/messages', (req, res) => {
+        messages.findAll()
             .then(result => res.status(200).json(result))
             .catch(error => res.status(500).json(error))
     })
 
-    app.get('/contacts/:id', (req, res) => {
-        contacts.buildById(req.params.id)
+    app.get('/messages/:id', (req, res) => {
+        messages.findOne(req.params.id)
             .then(result => res.status(200).json(result))
             .catch(error => res.status(500).json(error))
     })
 
-    app.post('/contacts',
-        check('name').not().isEmpty().withMessage('must not be empty'),
+    app.post('/messages',
+        check('type').not().isEmpty().withMessage('must not be empty'),
+        check('statement').not().isEmpty().withMessage('must not be empty'),
         (req, res) => {
 
             validate(req, (errors) => {
                 return res.status(400).json({ errors: errors });
             })
 
-            contacts.insert(req.body)
+            messages.insert(req.body)
                 .then(result => res.status(200).json(result))
                 .catch(error => res.status(500).json(error))
         })
 
-    app.put('/contacts/:id',
-        check('name').not().isEmpty().withMessage('must not be empty'),
+    app.put('/messages/:id',
+        check('type').not().isEmpty().withMessage('must not be empty'),
+        check('statement').not().isEmpty().withMessage('must not be empty'),
         (req, res) => {
 
             validate(req, (errors) => {
                 return res.status(400).json({ errors: errors });
             })
 
-            contacts.update(req.params.id, req.body)
+            messages.update(req.params.id, req.body)
                 .then(result => res.status(200).json(result))
                 .catch(error => res.status(500).json(error))
         })
 
-    app.delete('/contacts/:id', (req, res) => {
-        contacts.remove(req.params.id)
+    app.delete('/messages/:id', (req, res) => {
+        messages.remove(req.params.id)
             .then(result => res.status(200).json(result))
             .catch(error => res.status(500).json(error))
     })

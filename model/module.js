@@ -5,16 +5,16 @@ const schema = mongoose.Schema({
         type: String,
         required: true
     },
-    init_module: {
+    init_state: {
         type: mongoose.Schema.ObjectId,
-        ref: 'module'
+        ref: 'state'
     },
-    modules: [{
+    states: [{
         type: mongoose.Schema.ObjectId,
-        ref: 'module'
+        ref: 'state'
     }]
 }, {
     versionKey: false
 })
 
-module.exports = mongoose.model('contact', schema);
+module.exports = mongoose.model('module', schema);
