@@ -45,6 +45,19 @@ module.exports = app => {
                 .catch(error => res.status(500).json(error))
         })
 
+    app.patch('/contacts/:id',
+        check('state').not().isEmpty().withMessage('must not be empty'),
+        (req, res) => {
+
+            validate(req, (errors) => {
+                return res.status(400).json({ errors: errors });
+            })
+
+            contacts.patch(req.params.id, req.body)
+                .then(result => res.status(200).json(result))
+                .catch(error => res.status(500).json(error))
+        })
+
     app.delete('/contacts/:id', (req, res) => {
         contacts.remove(req.params.id)
             .then(result => res.status(200).json(result))

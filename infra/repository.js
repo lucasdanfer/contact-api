@@ -1,7 +1,7 @@
- function Repository (model) {
-    
+function Repository(model) {
+
     this.model = model
-    
+
     this.findAll = () => model.find().exec()
 
     this.findOne = _id => model.findById(_id).exec()
@@ -10,25 +10,33 @@
 
     this.update = (_id, req) => model.findByIdAndUpdate(_id, req).exec()
 
-    this.remove = _id => model.remove({"_id" : _id}).exec()
+    this.patch = (_id, req) =>
+        model.findById(_id).exec()
+            .then(result => {
+                result.states.push(req.state)
+                model.findByIdAndUpdate(_id, result).exec()
+            })
+            .catch(error => console.log(error))
+
+    this.remove = _id => model.remove({ "_id": _id }).exec()
 
     this.build = () => model.find().populate({
-        path: 'modules',
+        path: 'states',
         populate: {
-            path: 'states',
-            populate: {
-                path: 'messages'
-            }
+            path: 'messages'
+        }, 
+        populate: {
+            path: 'options'
         }
     }).exec()
 
     this.buildById = _id => model.findById(_id).populate({
-        path: 'modules',
+        path: 'states',
         populate: {
-            path: 'states',
-            populate: {
-                path: 'messages'
-            }
+            path: 'messages'
+        }, 
+        populate: {
+            path: 'options'
         }
     }).exec()
 

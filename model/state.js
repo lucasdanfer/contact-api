@@ -16,6 +16,10 @@ const schema = mongoose.Schema({
     messages: [{
         type: mongoose.Schema.ObjectId,
         ref: 'message'
+    }],
+    options: [{
+        type: Object,
+        required: false
     }]
 }, {
     versionKey: false
